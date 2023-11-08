@@ -1,22 +1,7 @@
-﻿#include "khaibao.h"
+#include "khaibao.h"
 
 void ListSach::addSach(const string& TenSach, const string& TacGia, int NamXuatBan) {
 	Node* crr = this->GetHead();
-
-	// Kiểm tra xem cuốn sách đã tồn tại trong danh sách chưa
-	/*
-	
-	while (crr != nullptr) {
-		if (TenSach == crr->ThongTinSach.TenSach && TacGia == crr->ThongTinSach.TacGia && NamXuatBan == crr->ThongTinSach.NamXuatBan) {
-			// Sách đã tồn tại, tăng số lượng
-			crr->ThongTinSach.SoLuong += 1;
-			Sach newSach(TenSach, TacGia, NamXuatBan);
-			int id = newSach.randomId();
-			return;
-		}
-		crr = crr->next;
-	}
-	*/
 	// Tạo đối tượng sách mới với thông tin từ tham số
 	Sach newSach(TenSach, TacGia, NamXuatBan);
 	int id = newSach.randomId();
@@ -37,37 +22,7 @@ void ListSach::addSach(const string& TenSach, const string& TacGia, int NamXuatB
 	}
 }
 
-void ListSach::PrintSachTQ() {
-	Node* crr = this->GetHead();
-	// Kiểm tra xem danh sách có sách nào không
-	if (!crr) {
-		cout << "Danh sach sach trong." << endl;
-		return;
-	}
-	
-		cout << "---------------------------------------------------------------------------" << endl;
-		cout << "| " << setw(30) << left << "Ten sach" << " | " << setw(20) << left << "Tac gia" << " | "
-			<< setw(15) << left << "Nam xuat ban" << " | " << setw(10) << left <<endl;
-		cout << "---------------------------------------------------------------------------" << endl;
-		set<string> printedBooks;
-		while(crr!=nullptr){
 
-			string bookKey = crr->ThongTinSach.TenSach + crr->ThongTinSach.TacGia + to_string(crr->ThongTinSach.NamXuatBan);
-
-			// Kiểm tra xem cuốn sách đã được in trước đó chưa
-			if (printedBooks.find(bookKey) == printedBooks.end()) {
-					cout<<"| " << setw(30) << left << crr->ThongTinSach.TenSach << " | "
-					<< setw(20) << left << crr->ThongTinSach.TacGia << " | "
-					<< setw(15) << left << crr->ThongTinSach.NamXuatBan << " | " << endl;
-					cout << "---------------------------------------------------------------------------" << endl;
-				// Đánh dấu cuốn sách đã được in
-				printedBooks.insert(bookKey);
-			}
-					crr = crr->next;
-		}
-	
-	return;
-}
 void ListSach::PrintSach() {
 	Node* crr = this->GetHead();
 	if (!crr) {
@@ -102,24 +57,38 @@ void ListSach::searchBook(const string& TenSach) {
 			cout << "-------------------------------------------------------------------------------------------------" << endl;
 			Node* crr = this->GetHead();
 
-			while (crr != nullptr && TenSach == crr->ThongTinSach.TenSach) {
-				cout << "| " << setw(5) << left << crr->ThongTinSach.ID << " | "
-					<< setw(30) << left << crr->ThongTinSach.TenSach << " | "
-					<< setw(20) << left << crr->ThongTinSach.TacGia << " | "
-					<< setw(15) << left << crr->ThongTinSach.NamXuatBan << " | "
-					<< setw(10) << left << crr->ThongTinSach.SoLuong << " |" << endl;
-				cout << "-------------------------------------------------------------------------------------------------" << endl;
+			while (crr != nullptr) {
+				if(TenSach == crr->ThongTinSach.TenSach)
+				{
+					cout << "| " << setw(5) << left << crr->ThongTinSach.ID << " | "
+						<< setw(30) << left << crr->ThongTinSach.TenSach << " | "
+						<< setw(20) << left << crr->ThongTinSach.TacGia << " | "
+						<< setw(15) << left << crr->ThongTinSach.NamXuatBan << " | "
+						<< setw(10) << left << crr->ThongTinSach.SoLuong << " |" << endl;
+					cout << "-------------------------------------------------------------------------------------------------" << endl;
+				}
 				crr = crr->next;
 			}
 		
 	return;
 }
-long ListSach::SoLuong() {
+void ListSach::SoLuong() {
 	Node* crr = head;
-	int cout = 0;
+	
 	while (crr != nullptr) {
-		cout++;
-		crr = crr->next;
+		Node* crr1 = head;
+		set<string> FlagBooks;
+		string bookKey = crr->ThongTinSach.TenSach + crr->ThongTinSach.TacGia + to_string(crr->ThongTinSach.NamXuatBan);
+		if (FlagBooks.find(bookKey) == FlagBooks.end()) {
+			int soLuong = 0;
+			while (crr1 != nullptr) {
+				if (crr1->ThongTinSach.TenSach == crr->ThongTinSach.TenSach && crr1->ThongTinSach.TacGia == crr->ThongTinSach.TacGia && crr1->ThongTinSach.NamXuatBan == crr->ThongTinSach.NamXuatBan) {
+					soLuong++;
+				}
+			}
+			crr->ThongTinSach.SoLuong = soLuong;
+			FlagBooks.insert(bookKey);
+		}		
+		crr1 = crr1->next;
+		}
 	}
-	return cout;
-}
